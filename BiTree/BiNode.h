@@ -1,55 +1,107 @@
-#ifndef stack_
-#define stack_
-#include "cstddef"
-typedef BiTree ElemTypeS;
+#ifndef _BiNode
+#define _BiNode
 
-typedef struct StackNode
+typedef char ElemTypeB;
+
+typedef struct BiNode
 {
-    ElemTypeS data;
-    struct StackNode *pre;
-    struct StackNode *top;
-}StackNode,*Stack;
+    ElemTypeB data;
+    struct BiNode *lchild;
+    struct BiNode *rchild;
+}BiNode,*BiTree;
 
-Stack InitStack(Stack &S){
-    S->pre = NULL;
-    S->top = NULL;
-    return S;
-}
-
-void Push(Stack &S, ElemTypeS e){
-    Stack add_elem = new StackNode;
-    add_elem->data = e;
-    add_elem->pre = S->top;
-    S->top = add_elem;
-}
-
-void Pop(Stack &S, ElemTypeS &p){
-    if(S->top){
-        p = S->top->data;
-        if(S->top->pre){
-            S->top = S->top->pre;
-        }else{
-            S->top = NULL;
-        }
-    }else{
-        p = NULL;
+void visit(ElemTypeB e);
+// 递归遍历的方法
+void PreOrder(BiTree T){
+    BiTree p=T;
+    if(p){
+        visit(p->data);
+        PreOrder(p->lchild);
+        PreOrder(p->rchild);
     }
 }
 
-void GetTop(Stack S, ElemTypeS &p){
-    if(S->top) p = S->top->data;
-    else p = NULL;
+void InOrder(BiTree T){
+    BiTree p=T;
+    if(p){
+        InOrder(p->lchild);
+        visit(p->data);
+        InOrder(p->rchild);
+    }
 }
-bool isEmpty(Stack S){
-    if(S->top==S->pre) return true;
-    else return NULL;
+
+void PostOrder(BiTree T){
+    BiTree p=T;
+    if(p){
+        PostOrder(p->lchild);
+        PostOrder(p->rchild);
+        visit(p->data);
+    }
 }
 
 
+// 非递归的实现
+#include "stack.h"
 
+void PreOrder2(BiTree T){
+    Stack S;
+    InitStack(S);
+    BiTree p = T;
+    while(p || !isEmpty(S)){
+        if(p){
+            Push(S,p);
+            visit(p->data);
+            p = p -> lchild;
+        }else{
+            Pop(S,p);
+            if(p->rchild) p=p->rchild;
+            else p=NULL;
+        }
+    }
+}
 
+void InOrder2(BiTree T){
+    Stack S;
+    InitStack(S);
+    BiTree p = T;
+    while(p || !isEmpty(S)){
+        if(p){
+            Push(S,p);
+            p = p->lchild;
+        }else{
+            Pop(S,p);
+            visit(p->data);
+            if(p->rchild) p = p->rchild;
+            else p = NULL;
+        }
+    }
+}
 
+void PostOrder2(BiTree T){
+    Stack S;
+    InitStack(S);
+    BiTree p = T;
+    BiTree r = NULL;
+    while(p || !isEmpty(S)){
+        if(p){
+            Push(p);
+            p = p->lchild;
+        }else{
+            GetTop(S,p);
+            if(p->rchild && p->rchild!=r){
+                 p = p->rchild;
+            }else{
+                Pop(S,p);
+                visit(p->data);
+                r = p;
+                p = NULL;
+            }
+        }
+    }
 
+}
+
+//  层次遍历
 
 
 
