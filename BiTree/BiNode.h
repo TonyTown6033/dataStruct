@@ -1,5 +1,6 @@
 #ifndef _BiNode
 #define _BiNode
+#define MAXSIZE 100
 
 typedef char ElemTypeB;
 
@@ -41,6 +42,7 @@ void PostOrder(BiTree T){
 
 
 // 非递归的实现
+typedef BiTree ElemTypeS;
 #include "stack.h"
 
 void PreOrder2(BiTree T){
@@ -55,7 +57,7 @@ void PreOrder2(BiTree T){
         }else{
             Pop(S,p);
             if(p->rchild) p=p->rchild;
-            else p=NULL;
+            else p = NULL;
         }
     }
 }
@@ -84,7 +86,7 @@ void PostOrder2(BiTree T){
     BiTree r = NULL;
     while(p || !isEmpty(S)){
         if(p){
-            Push(p);
+            Push(S,p);
             p = p->lchild;
         }else{
             GetTop(S,p);
@@ -103,6 +105,41 @@ void PostOrder2(BiTree T){
 
 //  层次遍历
 
+void LayerOrder(BiTree T){
+    BiTree p;
+    int front=-1,rear=-1;
+    BiTree Nodes[MAXSIZE];
+    if(T){
+        Nodes[++rear] = T;
+        while(front<rear){
+            p = Nodes[++front];
+            visit(p->data);
+            if(p->lchild) Nodes[++rear] = p->lchild;
+            if(p->rchild) Nodes[++rear] = p->rchild;
+        }
+    }
+}
 
+int Depth(BiTree T){
+    BiTree p;
+    int front=-1,rear=-1;
+    int depth = 0;
+    int r;
+    BiTree Nodes[MAXSIZE];
+    if(T){
+        Nodes[++rear] = T;
+        r = rear;
+        while (front<rear){
+            p = Nodes[++front];
+            if(p->lchild) Nodes[++rear] = p->lchild;
+            if(p->rchild) Nodes[++rear] = p->rchild;
+            if (front == r){
+                depth++;
+                r = rear;
+            }
+        }
+    }
+    return depth;
+}
 
 #endif

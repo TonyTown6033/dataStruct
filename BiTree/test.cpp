@@ -1,7 +1,7 @@
 #include "iostream"
 #include "BiNode.h"
 
-void visit(ElemType e){
+void visit(ElemTypeB e){
 	std::cout<<e<<' ';
 }
 
@@ -41,6 +41,9 @@ int main(){
 	cout<<"LRN is :";
 	PostOrder2(T);
 	cout<<endl;
-	cout<<"the depth is "<<Depth(T)<<endl;
+	LayerOrder(T);
+	cout<<endl;
+	cout<<Depth(T)<<endl;
 	return 0;
+
 }
