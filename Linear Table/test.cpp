@@ -9,7 +9,8 @@ int main(){
     LinkList L;
     int a=3,b=5;
     Init_test(L);
-    exam7(L,a,b);
+    cout<<L->data<<endl;
+    exam9(L);
     print_List(L);
     return 0;
 }

@@ -20,7 +20,7 @@ void Init_test(LinkList &L){
     // 头节点->5->6->9->7->4->5->5->6
     Init_LinkList(L);
     int i;
-    int arr[8]={1,2,3,4,4,4,7,8};
+    int arr[8]={11,52,55,4,4,4,7,8};
     for(i=0;i<8;i++){
         List_TailInsert(L,arr[i]);
     }
@@ -81,7 +81,7 @@ void exam4(LinkList &L){
     LinkNode *min=L->next,*pre=L,*temp;
     LinkNode *p = L->next;
     while(p){
-        if(p->data < min->data) {
+        if(p->data <= min->data) {
             min = p;
             temp = pre;
         }
@@ -162,8 +162,71 @@ void exam7(LinkList &L,ElemType low,ElemType high){
     }
 }
 
+//8.找两个链表的公共节点(未测试)
+LinkNode *SameNode(LinkList L1,LinkList L2){
+    LinkNode *arr1[MAXSIZE],*arr2[MAXSIZE];
+    int top1 = -1 , top2= -1;
+    LinkNode *p1=L1->next,*p2=L2->next;
+    while (p1){
+        arr1[++top1] = p1;
+        p1 = p1->next;
+    }
+    while (p2){
+        arr2[++top2] = p2;
+        p2 = p2->next;
+    }
 
+    LinkNode *shareNode=NULL;
+    bool flag=true;
+    while(flag){
+        if(arr1[top1--]==arr2[top2--]){
+            shareNode = arr1[top1+1];
+            flag = true;
+        }else{
+            flag = NULL;
+        }
+    }
+    
+    return shareNode;
+}
 
+//9.以递增次序输出链表元素，并释放空间(要求不使用数组做辅助空间)
+void exam9(LinkList &L){
+    LinkNode *min=L->next,*pre=L,*temp;
+    LinkNode *p = L->next;
+    int lenth = L->data;
+    int i;
+    for(i=0;i<lenth;i++){
+        min=L->next;
+        pre=L;
+        temp=NULL;
+        p=L->next;
+        
+        while(p){
+            if(p->data <= min->data) {
+                min = p;
+                temp = pre;
+            }
+            pre = p;
+            p = p->next;
+        }
+        //访问最小节点
+        std::cout<<min->data<<" ";
+        //删除最小的节点
+        if(min->next){
+            temp = min->next;
+            min->data = temp->data;
+            min->next = temp->next;
+            delete temp;
+            L->data--;
+        }else{
+            temp->next = NULL;
+            delete min;
+            L->data--;
+        }   
+    }
+    std::cout<<std::endl;
+}
 
 
 
