@@ -20,7 +20,7 @@ void Init_test(LinkList &L){
     // 头节点->5->6->9->7->4->5->5->6
     Init_LinkList(L);
     int i;
-    int arr[8]={5,6,9,7,4,5,5,2};
+    int arr[8]={1,2,3,4,4,4,7,8};
     for(i=0;i<8;i++){
         List_TailInsert(L,arr[i]);
     }
@@ -43,10 +43,12 @@ void exam1(LinkList &L,ElemType x){
                 }
                 p->data = temp->data;
                 p->next = temp->next;
+                delete temp;
 
             }else{
                 pre->next = NULL;
                 delete p;
+                L->data--;
             }
         }
         pre = p;
@@ -100,11 +102,65 @@ void exam4(LinkList &L){
 }
 
 //5.就地逆置链表 要求空间复杂度为O(1)
-void exam5(LinkList &L){
-    
+void swap(LinkList &r,LinkList &t){
+    ElemType temp;
+    temp = r->data;
+    r->data = t->data;
+    t->data = temp;
 }
 
+void exam5(LinkList &L){
+    LinkNode *r,*t;
+    int i,j;
+    int lenth = L->data;
+    for(i=0,r=L->next;i<lenth;i++,r=r->next){
+        for(j=0,t=L->next;j<lenth-i-1;j++,t=t->next){
+            swap(t,t->next);
+        }
+    }
+}
 
+//6.给单链表排序
+void sort(LinkList &L){
+    LinkNode *r,*t;
+    int i,j;
+    int lenth = L->data;
+    for(i=0,r=L->next;i<lenth;i++,r=r->next){
+        for(j=0,t=L->next;j<lenth-i-1;j++,t=t->next){
+            if(t->data<t->next->data)   swap(t,t->next);
+        }
+    } 
+}
+
+//7.删除单链表中某个区间内的节点
+void exam7(LinkList &L,ElemType low,ElemType high){
+// 删除值在 low-high之间的节点
+    LinkNode *p=L->next;
+    LinkNode *temp,*pre;
+    while(p!=NULL){
+        if(p->data<=high && p->data>=low){
+            if(p->next!=NULL){
+                temp = p->next;
+                while((temp->data<=high && temp->data>=low )& temp!=NULL){
+                    pre = temp;
+                    temp = temp->next;
+                    delete pre;
+                    L->data--;
+                }
+                p->data = temp->data;
+                p->next = temp->next;
+                delete temp;
+
+            }else{
+                pre->next = NULL;
+                delete p;
+                L->data--;
+            }
+        }
+        pre = p;
+        p = p->next;
+    }
+}
 
 
 

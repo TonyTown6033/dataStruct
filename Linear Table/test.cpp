@@ -7,8 +7,9 @@ typedef int ElemType;
 using namespace std;
 int main(){
     LinkList L;
+    int a=3,b=5;
     Init_test(L);
-    exam4(L);
+    exam7(L,a,b);
     print_List(L);
     return 0;
 }

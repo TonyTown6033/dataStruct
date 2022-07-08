@@ -79,7 +79,7 @@ bool ListInsert(LinkList &L,int i,ElemType e){
     return true;
 }
 
-bool DeleteNode(LinkList &L,int i){
+bool Delete_Node_Order(LinkList &L,int i){
     //删除第i个节点
     if(i<1 | i>L->data) return NULL; //这里不允许删除头节点
     LinkNode *p,*r; 
@@ -90,5 +90,6 @@ bool DeleteNode(LinkList &L,int i){
     L->data--;
     return true;
 }
+
 
 #endif
