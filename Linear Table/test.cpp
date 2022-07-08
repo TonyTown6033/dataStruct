@@ -2,14 +2,13 @@
 
 typedef int ElemType;
 #include "LinkList.h"
+#include "examwork.h"
 
 using namespace std;
 int main(){
     LinkList L;
-    int a = 5;
-    Init_LinkList(L);
-    List_HeadInsert(L,a);
-    LinkList p=L->next;
-    cout<<p->data<<endl;
+    Init_test(L);
+    exam4(L);
+    print_List(L);
     return 0;
 }
