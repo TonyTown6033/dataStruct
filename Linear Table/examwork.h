@@ -20,9 +20,17 @@ void Init_test(LinkList &L){
     // 头节点->5->6->9->7->4->5->5->6
     Init_LinkList(L);
     int i;
-    int arr[8]={11,52,55,4,4,4,7,8};
-    for(i=0;i<8;i++){
+    int arr[11]={4,4,4,7,8,11,11,52,52,52,55};
+    for(i=0;i<11;i++){
         List_TailInsert(L,arr[i]);
+    }
+    print_List(L);
+}
+
+void Init_Test_2(LinkList &L,int a[],int len){
+    Init_LinkList(L);
+    for(int i=0;i<len;i++){
+        List_TailInsert(L,a[i]);
     }
     print_List(L);
 }
@@ -163,6 +171,7 @@ void exam7(LinkList &L,ElemType low,ElemType high){
 }
 
 //8.找两个链表的公共节点(未测试)
+//NOT PASS
 LinkNode *SameNode(LinkList L1,LinkList L2){
     LinkNode *arr1[MAXSIZE],*arr2[MAXSIZE];
     int top1 = -1 , top2= -1;
@@ -247,6 +256,7 @@ void exam10(LinkList &A,LinkList &B){
         }else{
             flag=1;
         }
+        pre = p;
         p = p ->next;
     }
 }
@@ -265,7 +275,7 @@ void exam11(LinkList C,LinkList &A,LinkList &B){
             List_TailInsert(A,p->data);
         }else{
             flag=0;
-            List_TailInsert(B,p->data);
+            List_HeadInsert(B,p->data);
         }
         p = p->next;
  }
@@ -288,7 +298,7 @@ void exam12(LinkList &L){
 }
 
 //13.讲两个递增的单链表合并成一个递减的单链表，要求不删除并利用原始的链表节点。
-
+//NOT PASS
 void exam13(LinkList &A,LinkList &B,LinkList &C){
     Init_LinkList(C);
     LinkNode *p=A->next;
@@ -318,7 +328,9 @@ void exam13(LinkList &A,LinkList &B,LinkList &C){
 }
 
 
+
 //14.将两个递增的单链表中公共的部分，提出来并且不破坏原始链表
+//NOT PASS
 void exam14(LinkList A,LinkList B,LinkList C){
     LinkNode *p;
     p = SameNode(A,B);
@@ -327,6 +339,7 @@ void exam14(LinkList A,LinkList B,LinkList C){
 }
 
 //15.求两个有序(递增)链表的交集
+//NOT PASS
 LinkList mixed(LinkList A,LinkList B){
     LinkNode *r_Head;
     Init_LinkList(r_Head);
@@ -364,7 +377,6 @@ LinkList mixed(LinkList A,LinkList B){
 
 
 //16. 有2个整数序列A&B，判断B是否是A的连续子序列
-
 bool exam16(LinkList A, LinkList B){
     //初始化一个队列
     LinkNode *Queue[MAXSIZE];
@@ -378,7 +390,7 @@ bool exam16(LinkList A, LinkList B){
     }
  
     p = A->next;
-    while(p!=NULL | (front<rear)){
+    while(p!=NULL & (front<rear)){
         if(p->data == Queue[++front]->data){
             p = p->next;
         }else{
@@ -386,9 +398,9 @@ bool exam16(LinkList A, LinkList B){
             front = -1;  
         }
     }
- 
-    if(front<rear) return true;
-    else return NULL;
+    //如果队列为空
+    if(!(front<rear)) return true;
+    return NULL;
 }
 
 // 17. 判断带头节点的循环双链表是否对称
@@ -412,6 +424,7 @@ int exam22(LinkList L,int k){
 }
 
 //23. 
+//NOT PASS
 LinkNode *exam23(LinkList str1,LinkList str2){
     LinkNode *Stack1[MAXSIZE];
     LinkNode *Stack2[MAXSIZE];
@@ -450,59 +463,86 @@ void exam24(LinkList &L){
  //构造一个辅助数组 特点是a[n] 
     int a[MAXSIZE];
     int temp;
-    LinkNode *p = L->next;
- 
+    LinkNode *p;
+    int i;
+
+    for(i=0;i<MAXSIZE;i++){
+        a[i] = 0;
+    }
+
  //处理链表 同时初始化数组
     p = L->next;
-    LinkNode *pre=L;
+    LinkNode *pre=L,*pre0=L;
+    LinkNode *dNode;
     while(p){
         temp = p->data;
         temp = abs(temp);
-        if(a[temp]==0) a[temp] =1;
-        else{
-            pre->next = p->next;
-            pre->data = p->data;
-            delete p;
-            p = pre;
-        }
-  
-  
-        pre =p;
+        
+        if(a[temp]==0) {
+            a[temp] =1;
+        }else if(a[temp]==1){
+            if(p->next){
+                dNode = p->next;
+                //这两行叫交代后事
+                p->data = dNode->data;    
+                p->next = dNode->next;
+                delete dNode;
+                L->data--;
+                p = pre;
+            }else{
+                pre->next = NULL;
+                delete p;
+                L->data--;
+                p = pre;
+            }
+        }        
+        pre = p;
         p = p->next;
     }
- 
+/*
+    for(i=0;i<20;i++){
+        std::cout<<a[i]<<' ';
+    }
+ */
 }
 
 //25.
 
 LinkList exam25(LinkList L){
     //初始化队列
-    LinkNode *Queue[MAXSIZE];
+    ElemType Queue[MAXSIZE];
     int rear=-1,front=-1;
     LinkNode *p=L->next;
- 
+
     while(p){
-        Queue[++rear] = p;
+        Queue[++rear] = p->data;
         p = p->next;
     }
  
     LinkNode *rt_head;
     Init_LinkList(rt_head);
     LinkNode *rt=rt_head;
- 
+    LinkNode *Node_I;
+
     int flag=0;
+    int temp;
     while(front<rear){
         if(flag==0){
             flag = 1;
-            rt->next = Queue[++front];  
-            rt = rt->next;
+            temp = Queue[++front];
         }else if(flag==1){
             flag=0;
-            rt->next = Queue[rear--];
-            rt=rt->next;
+            temp = Queue[rear--];
         }
+        Node_I = NULL;
+        Node_I = new LinkNode;
+        Node_I->data = temp;
+        Node_I->next = NULL;
+        rt->next = Node_I;
+        rt = rt->next;
+        
     }
-    return rt;
+    return rt_head;
 }
 
 #endif
