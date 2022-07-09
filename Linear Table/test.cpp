@@ -13,9 +13,10 @@ int main(){
     int b[]={3,4,5};
     int len1=11;
     int len2=3;
-    Init_Test_2(A,a,len1);
-    //Init_Test_2(B,b,len2);
-    B = exam25(A);
+    Init_Cross_LinkList(A,B);
+    print_List(A);
     print_List(B);
+    L = exam23(A,B);
+    print_List(L);
     return 0;
 }

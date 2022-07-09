@@ -24,7 +24,7 @@ void Init_test(LinkList &L){
     for(i=0;i<11;i++){
         List_TailInsert(L,arr[i]);
     }
-    print_List(L);
+   // print_List(L);
 }
 
 void Init_Test_2(LinkList &L,int a[],int len){
@@ -32,7 +32,7 @@ void Init_Test_2(LinkList &L,int a[],int len){
     for(int i=0;i<len;i++){
         List_TailInsert(L,a[i]);
     }
-    print_List(L);
+    //print_List(L);
 }
 
 //1.删除单链表中所有值为x的节点
@@ -170,8 +170,30 @@ void exam7(LinkList &L,ElemType low,ElemType high){
     }
 }
 
-//8.找两个链表的公共节点(未测试)
-//NOT PASS
+//8.找两个链表的第一个公共节点(未测试)
+void Init_Cross_LinkList(LinkList &A,LinkList &B){
+    LinkList C;
+    int c[]={5,6,7};
+    int lenC=3;
+    Init_Test_2(C,c,lenC);
+    int a[]={1,2,3,4};
+    int lenA=4;
+    int b[]={9,8};
+    int lenB=2;
+    Init_Test_2(A,a,lenA);
+    Init_Test_2(B,b,lenB);
+    LinkNode *p,*r;
+    p = A->next;
+    r = B->next;
+    while (p->next) p = p->next;
+    while (r->next) r = r->next;
+    p->next = C->next;
+    r->next = C->next;
+    C->next = NULL;
+}
+
+
+
 LinkNode *SameNode(LinkList L1,LinkList L2){
     LinkNode *arr1[MAXSIZE],*arr2[MAXSIZE];
     int top1 = -1 , top2= -1;
@@ -189,13 +211,12 @@ LinkNode *SameNode(LinkList L1,LinkList L2){
     bool flag=true;
     while(flag){
         if(arr1[top1--]==arr2[top2--]){
-            shareNode = arr1[top1+1];
             flag = true;
         }else{
             flag = NULL;
         }
     }
-    
+    shareNode = arr1[top1+1];
     return shareNode;
 }
 
@@ -330,12 +351,10 @@ void exam13(LinkList &A,LinkList &B,LinkList &C){
 
 
 //14.将两个递增的单链表中公共的部分，提出来并且不破坏原始链表
-//NOT PASS
-void exam14(LinkList A,LinkList B,LinkList C){
+LinkList exam14(LinkList A,LinkList B){
     LinkNode *p;
     p = SameNode(A,B);
-    C = new LinkNode;
-    C->next = p;
+    return p;
 }
 
 //15.求两个有序(递增)链表的交集
@@ -442,14 +461,16 @@ LinkNode *exam23(LinkList str1,LinkList str2){
         Stack2[++top2] = r;
         r = r->next;
     }
-    p=NULL;r=NULL;
-    while(top1>=0 | top2>=0){
-        p = Stack1[top1--];
-        r = Stack2[top2--];
+    p=Stack1[top1];r=Stack2[top2];
+    while(top1>=0 & top2>=0){
         if(!p->data==r->data) break;
+        p = Stack1[--top1];
+        r = Stack2[--top2];
+       
     }
     LinkNode *rt;
-    rt = Stack1[top1+1];
+    rt = Stack2[top2+2];//??????
+    
     return rt;
 }
 
