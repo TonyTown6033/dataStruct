@@ -228,6 +228,281 @@ void exam9(LinkList &L){
     std::cout<<std::endl;
 }
 
+//10. 将链表A分成两个A&B，A保存序号为奇数的节点，B保存偶数节点
+void exam10(LinkList &A,LinkList &B){
+    Init_LinkList(B);
+    LinkNode *p = A->next,*pre = A;
+    int flag=0;
+    while(p){
+        if(flag==1){
+            flag=0;
+        // 在B中添加这个节点
+            List_TailInsert(B,p->data);
+        // 在A中删除这个节点
 
+            if(p->next) p->data = p->next->data;
+            pre->next = p->next;
+            delete p;
+            p = pre;
+        }else{
+            flag=1;
+        }
+        p = p ->next;
+    }
+}
+
+//11. C={a1,b1,a2,b2,...,an,bn} 将它拆成两个链表A&B
+// 其中 A={a1,a2,..,an} B={bn,...,b2,b1}
+// 要求空间复杂度为O(1)
+void exam11(LinkList C,LinkList &A,LinkList &B){
+    Init_LinkList(A);
+    Init_LinkList(B);
+    LinkNode *p=C->next;
+    int flag=0;
+    while(p){
+        if(flag==0){
+            flag=1;
+            List_TailInsert(A,p->data);
+        }else{
+            flag=0;
+            List_TailInsert(B,p->data);
+        }
+        p = p->next;
+ }
+}
+
+//12.去除递增有序单链表内的重复元素
+void exam12(LinkList &L){
+    LinkNode *p=L->next;
+    LinkNode *pre=L;
+    while(p->next){
+        pre=p;
+        p=p->next;
+        if(pre->data==p->data){
+            pre->next = p->next;
+            pre->data = p->data;
+            delete p;
+            p = pre;
+        }
+    }
+}
+
+//13.讲两个递增的单链表合并成一个递减的单链表，要求不删除并利用原始的链表节点。
+
+void exam13(LinkList &A,LinkList &B,LinkList &C){
+    Init_LinkList(C);
+    LinkNode *p=A->next;
+    LinkNode *r=B->next;
+    LinkNode *t=C;
+ 
+    LinkNode *Stack[MAXSIZE];
+    int top=-1;
+ 
+    while(p!=NULL ||  r!=NULL){
+        if(p->data <= r->data){
+        Stack[++top] = p;
+        p = p ->next;
+    }else{
+        Stack[++top] = r;
+        r = r->next;
+    }
+    }
+ 
+    while(top>=0){
+        t->next = Stack[top--];
+    }
+ 
+    A->next = NULL;
+    B->next = NULL;
+    
+}
+
+
+//14.将两个递增的单链表中公共的部分，提出来并且不破坏原始链表
+void exam14(LinkList A,LinkList B,LinkList C){
+    LinkNode *p;
+    p = SameNode(A,B);
+    C = new LinkNode;
+    C->next = p;
+}
+
+//15.求两个有序(递增)链表的交集
+LinkList mixed(LinkList A,LinkList B){
+    LinkNode *r_Head;
+    Init_LinkList(r_Head);
+    LinkNode *r=r_Head;
+    LinkNode *p=A->next,*t=B->next;
+    LinkNode *temp;
+    ElemType value;
+    
+    while(p!=NULL & t!=NULL){
+        if(p->data==t->data){
+            temp = NULL;
+            temp = new LinkNode;
+            temp->data =p->data;
+            r->next = temp;
+            r = r->next;
+        }else if(p->data<t->data){
+            if(p->next){
+                p=p->next;
+                value = p->data;
+            }else{
+                break;
+            } 
+        }else if(p->data>t->data){
+            if(t->next){
+                t = t ->next;
+                value = t->data;
+            }else{
+                break;
+            }
+        } 
+    }
+ 
+    return r_Head;
+}
+
+
+//16. 有2个整数序列A&B，判断B是否是A的连续子序列
+
+bool exam16(LinkList A, LinkList B){
+    //初始化一个队列
+    LinkNode *Queue[MAXSIZE];
+    int rear=-1,front=-1;
+    
+    //将B装入队列
+    LinkNode *p = B->next;
+    while(p){
+        Queue[++rear] = p;
+        p = p->next;
+    }
+ 
+    p = A->next;
+    while(p!=NULL | (front<rear)){
+        if(p->data == Queue[++front]->data){
+            p = p->next;
+        }else{
+            p = p->next;
+            front = -1;  
+        }
+    }
+ 
+    if(front<rear) return true;
+    else return NULL;
+}
+
+// 17. 判断带头节点的循环双链表是否对称
+
+
+// 22.查找单链表倒数第k个位置上的节点，并输出data
+int exam22(LinkList L,int k){
+    LinkNode *Stack[MAXSIZE];
+    int top=-1;
+    LinkNode *p=L->next;
+    while(p){
+        Stack[++top] = p;
+        p = p->next;
+    }
+ 
+    if(k>top+1) return 0;
+ 
+    for(int i=1;i<=k;i++)  p = Stack[top--];
+    std::cout<<p->data<<std::endl;
+    return 1;
+}
+
+//23. 
+LinkNode *exam23(LinkList str1,LinkList str2){
+    LinkNode *Stack1[MAXSIZE];
+    LinkNode *Stack2[MAXSIZE];
+    int top1=-1,top2=-1;
+    LinkNode *p,*r;
+    p = str1->next;
+    r = str2->next;
+ 
+    while(p){
+        Stack1[++top1] = p;
+        p = p->next;
+    }
+ 
+    while(r){
+        Stack2[++top2] = r;
+        r = r->next;
+    }
+    p=NULL;r=NULL;
+    while(top1>=0 | top2>=0){
+        p = Stack1[top1--];
+        r = Stack2[top2--];
+        if(!p->data==r->data) break;
+    }
+    LinkNode *rt;
+    rt = Stack1[top1+1];
+    return rt;
+}
+
+//24.
+int abs(int a){
+    if(a>=0) return a;
+    else return -a;
+}
+
+void exam24(LinkList &L){
+ //构造一个辅助数组 特点是a[n] 
+    int a[MAXSIZE];
+    int temp;
+    LinkNode *p = L->next;
+ 
+ //处理链表 同时初始化数组
+    p = L->next;
+    LinkNode *pre=L;
+    while(p){
+        temp = p->data;
+        temp = abs(temp);
+        if(a[temp]==0) a[temp] =1;
+        else{
+            pre->next = p->next;
+            pre->data = p->data;
+            delete p;
+            p = pre;
+        }
+  
+  
+        pre =p;
+        p = p->next;
+    }
+ 
+}
+
+//25.
+
+LinkList exam25(LinkList L){
+    //初始化队列
+    LinkNode *Queue[MAXSIZE];
+    int rear=-1,front=-1;
+    LinkNode *p=L->next;
+ 
+    while(p){
+        Queue[++rear] = p;
+        p = p->next;
+    }
+ 
+    LinkNode *rt_head;
+    Init_LinkList(rt_head);
+    LinkNode *rt=rt_head;
+ 
+    int flag=0;
+    while(front<rear){
+        if(flag==0){
+            flag = 1;
+            rt->next = Queue[++front];  
+            rt = rt->next;
+        }else if(flag==1){
+            flag=0;
+            rt->next = Queue[rear--];
+            rt=rt->next;
+        }
+    }
+    return rt;
+}
 
 #endif
